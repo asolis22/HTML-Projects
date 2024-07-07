@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('Butterflydesign.jpg'); /* Path to your image */
+    background-size: cover; /* Adjust the image size to cover the entire background */
+    background-repeat: no-repeat; /* Ensure the image does not repeat */
+    background-position: center; /* Center the image */
+    color: #000; /* Default text color to black */
+}
+
+header {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav ul li a.cta {
+    background-color: #00ff99;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: #000;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Adjust as needed */
+    padding: 0 2rem;
+    text-align: center;
+}
+
+
+.intro-text {
+    max-width: 50%;
+}
+
+.small-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    color: #000; /* Change to black */
+   
+}
+
+.large-text {
+    font-size: 6rem;
+    font-weight: bold;
+    color: #000; /* Change to black */
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    -webkit-text-stroke: 1px white;
+    text-stroke: 1px white;
+}
+
+.medium-text {
+    font-family: 'Alfa Slab One', sans-serif;
+    font-size: 2rem;
+    color: #46BCC4;
+    margin-top: .5rem;
+    -webkit-text-stroke: 1px white;
+    text-stroke: 1px white;
+    }
+
+.description {
+    font-size: 1.5rem;
+    margin-top: .5rem;
+    color: #000; /* Change to black */
+    font-style: italic;
+}
