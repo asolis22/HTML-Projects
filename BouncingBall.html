@@ -247,19 +247,23 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
-        function createBall(x, y, isOriginal = false) {
+        function createBall(x, y) {
             const ball = document.createElement('div');
             ball.classList.add('ball');
             ball.style.left = x + 'px';
             ball.style.top = y + 'px';
             ball.style.backgroundColor = getRandomColor();
 
-            if (isOriginal) {
-                ball.addEventListener('click', () => {
-                    clickCount++;
-                    updateScore();
-                });
-            }
+            ball.addEventListener('click', () => {
+                clickCount++;
+                updateScore();
+
+                const newX = Math.random() * (window.innerWidth - ball.offsetWidth);
+                const newY = Math.random() * (window.innerHeight - ball.offsetHeight);
+
+                const newBall = createBall(newX, newY);
+                animateBall(newBall);
+            });
 
             document.body.appendChild(ball);
 
@@ -283,15 +287,11 @@
 
                 if (x + ballWidth >= windowWidth || x <= 0) {
                     dx = -dx;
-                    if (ball.classList.contains('ball')) {
-                        ball.style.backgroundColor = getRandomColor(); // Change color only when hitting wall
-                    }
+                    ball.style.backgroundColor = getRandomColor(); // Change color only when hitting wall
                 }
                 if (y + ballHeight >= windowHeight || y <= 0) {
                     dy = -dy;
-                    if (ball.classList.contains('ball')) {
-                        ball.style.backgroundColor = getRandomColor(); // Change color only when hitting wall
-                    }
+                    ball.style.backgroundColor = getRandomColor(); // Change color only when hitting wall
                 }
 
                 ball.style.left = x + 'px';
@@ -326,7 +326,7 @@
             updateCounter();
             updateScore();
             updateLeaderboard();
-            originalBall = createBall(originalX, originalY, true);
+            originalBall = createBall(originalX, originalY);
             animateBall(originalBall);
             let timer = setInterval(() => {
                 secondsLeft--;
@@ -348,4 +348,3 @@
     </script>
 </body>
 </html>
-
