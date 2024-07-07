@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bouncing Ball Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+        #title {
+            font-size: 5rem;
+            font-family: 'Fredoka One', cursive;
+            text-shadow: 2px 2px 4px #000000;
+            color: #ff5733;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        #description {
+            font-size: 1.5rem;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #555;
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        .ball {
+            width: 15vw;
+            height: 25vh;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+        }
+        #counter {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        #score {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        #finalScore {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #ffffff;
+            border: 2px solid #333333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        #newGameButton {
+            display: none;
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #newGameButton:hover {
+            background-color: #0056b3;
+        }
+        #startButton {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #startButton:hover {
+            background-color: #0056b3;
+        }
+        #nameInput {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 2px solid #333333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #nameInput label {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        #nameInput input[type="text"] {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #nameInput button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #nameInput button:hover {
+            background-color: #0056b3;
+        }
+        #playerNameDisplay {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        #leaderboard {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1rem;
+            border: 1px solid #333333;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #leaderboard th, #leaderboard td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        #leaderboard th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">Circulo Pop!!</div>
+    <div id="description">Just pop the Original Circulo!! Simple</div>
+    <div id="nameInput">
+        <label for="playerName">Type your Name:</label>
+        <input type="text" id="playerName" placeholder="Enter your name">
+        <button id="nameSubmit">Submit</button>
+    </div>
+    <button id="startButton">Start Game</button>
+    <div id="counter">Time Left: <span id="timer">30</span> seconds</div>
+    <div id="finalScore"></div>
+    <div id="score">0</div>
+    <button id="newGameButton">New Game</button>
+    <div id="playerNameDisplay"></div>
+    <div id="leaderboard">
+        <h3>Leaderboard</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                <!-- Leaderboard rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <audio id="popSound" src="pop.mp3"></audio>
+    <script>
+        const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan', 'magenta', 'lime', 'deepskyblue', 'gold', 'white', 'black'];
+
+        let clickCount = 0;
+        let secondsLeft = 30;
+        let playerName = '';
+        let gameStarted = false;
+        let originalBall = null;
+        let originalX = 100, originalY = 100;
+        let originalDX = 10, originalDY = 10;
+        let originalBallAnimationFrame = null;
+
+        const counterElement = document.getElementById('counter');
+        const timerElement = document.getElementById('timer');
+        const finalScoreElement = document.getElementById('finalScore');
+        const scoreElement = document.getElementById('score');
+        const newGameButton = document.getElementById('newGameButton');
+        const playerNameDisplay = document.getElementById('playerNameDisplay');
+        const leaderboardBody = document.getElementById('leaderboardBody');
+        const titleElement = document.getElementById('title');
+        const descriptionElement = document.getElementById('description');
+        const popSound = document.getElementById('popSound');
+
+        function updateLeaderboard() {
+            let leaderboardData = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            leaderboardData.sort((a, b) => b.score - a.score);
+            leaderboardBody.innerHTML = '';
+            for (let i = 0; i < Math.min(leaderboardData.length, 5); i++) {
+                const player = leaderboardData[i];
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${i + 1}</td><td>${player.name}</td><td>${player.score}</td>`;
+                leaderboardBody.appendChild(row);
+            }
+        }
+
+        function saveScoreToLeaderboard() {
+            let leaderboardData = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            leaderboardData.push({ name: playerName, score: clickCount });
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboardData));
+            updateLeaderboard();
+        }
+
+        function updateCounter() {
+            counterElement.textContent = `Time Left: ${secondsLeft} seconds`;
+        }
+
+        function updateFinalScore() {
+            finalScoreElement.textContent = `Final Score: ${clickCount}`;
+            finalScoreElement.style.display = 'block';
+            counterElement.style.display = 'none';
+            scoreElement.style.display = 'none';
+            newGameButton.style.display = 'block';
+            document.querySelectorAll('.ball').forEach(ball => ball.remove());
+            playerNameDisplay.style.display = 'none';
+            saveScoreToLeaderboard();
+        }
+
+        function updateScore() {
+            scoreElement.textContent = clickCount;
+        }
+
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        function playPopSound() {
+            const sound = new Audio('pop.mp3');
+            sound.play();
+        }
+
+        function createBall(x, y) {
+            const ball = document.createElement('div');
+            ball.classList.add('ball');
+            ball.style.left = x + 'px';
+            ball.style.top = y + 'px';
+            ball.style.backgroundColor = getRandomColor();
+
+            ball.addEventListener('click', () => {
+                if (!gameStarted || ball !== originalBall) return;
+
+                clickCount++;
+                updateScore();
+                playPopSound();
+
+                const newX = Math.random() * (window.innerWidth - ball.offsetWidth);
+                const newY = Math.random() * (window.innerHeight - ball.offsetHeight);
+
+                const newBall = createBall(newX, newY);
+                animateBall(newBall);
+            });
+
+            document.body.appendChild(ball);
+
+            return ball;
+        }
+
+        function animateBall(ball) {
+            let dx = 10, dy = 10;
+
+            function moveBall() {
+                const ballWidth = ball.clientWidth;
+                const ballHeight = ball.clientHeight;
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+                let x = parseFloat(ball.style.left);
+                let y = parseFloat(ball.style.top);
+
+                x += dx;
+                y += dy;
+
+                if (x + ballWidth >= windowWidth || x <= 0) {
+                    dx = -dx;
+                    ball.style.backgroundColor = getRandomColor(); // Change color only when hitting wall
+                }
+                if (y + ballHeight >= windowHeight || y <= 0) {
+                    dy = -dy;
+                    ball.style.backgroundColor = getRandomColor(); // Change color only when hitting wall
+                }
+
+                ball.style.left = x + 'px';
+                ball.style.top = y + 'px';
+
+                requestAnimationFrame(moveBall);
+            }
+
+            moveBall();
+        }
+
+        document.getElementById('startButton').addEventListener('click', () => {
+            gameStarted = true;
+            document.getElementById('startButton').style.display = 'none';
+            document.getElementById('nameInput').style.display = 'block';
+            titleElement.style.display = 'none';
+            descriptionElement.style.display = 'none';
+        });
+
+        document.getElementById('nameSubmit').addEventListener('click', () => {
+            playerName = document.getElementById('playerName').value;
+            if (playerName.trim() === '') {
+                alert('Please enter a valid name.');
+                return;
+            }
+            document.getElementById('nameInput').style.display = 'none';
+            playerNameDisplay.textContent = `Player: ${playerName}`;
+            playerNameDisplay.style.display = 'block';
+            counterElement.style.display = 'block';
+            scoreElement.style.display = 'block';
+            newGameButton.style.display = 'none';
+            secondsLeft = 30;
+            clickCount = 0;
+            updateCounter();
+            updateScore();
+            updateLeaderboard();
+            originalBall = createBall(originalX, originalY);
+            animateBall(originalBall);
+            let timer = setInterval(() => {
+                secondsLeft--;
+                updateCounter();
+                if (secondsLeft === 0) {
+                    clearInterval(timer);
+                    gameStarted = false;
+                    updateFinalScore();
+                }
+            }, 1000);
+        });
+
+        newGameButton.addEventListener('click', () => {
+            document.getElementById('finalScore').style.display = 'none';
+            document.getElementById('startButton').style.display = 'block';
+            newGameButton.style.display = 'none';
+            titleElement.style.display = 'block';
+            descriptionElement.style.display = 'block';
+        });
+
+        updateLeaderboard();
+    </script>
+</body>
+</html>
