@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bouncing Ball Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            position: relative; /* Ensure positioning context for absolute positioning */
+        }
+        .ball {
+            width: 15vw;
+            height: 25vh;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer; /* Add cursor style for pointer */
+        }
+        #counter {
+            display: none; /* Hide counter initially */
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        #score {
+            display: none; /* Hide score counter initially */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        #finalScore {
+            display: none; /* Hide final score box initially */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #ffffff;
+            border: 2px solid #333333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        #newGameButton {
+            display: none; /* Hide new game button initially */
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #newGameButton:hover {
+            background-color: #0056b3;
+        }
+        #startButton {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #startButton:hover {
+            background-color: #0056b3;
+        }
+        #nameInput {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 2px solid #333333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #nameInput label {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        #nameInput input[type="text"] {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #nameInput button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #nameInput button:hover {
+            background-color: #0056b3;
+        }
+        #playerNameDisplay {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        #leaderboard {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1rem;
+            border: 1px solid #333333;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #leaderboard th, #leaderboard td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        #leaderboard th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div id="nameInput">
+        <label for="playerName">Type your Name:</label>
+        <input type="text" id="playerName" placeholder="Enter your name">
+        <button id="nameSubmit">Submit</button>
+    </div>
+    <button id="startButton">Start Game</button>
+    <div id="counter">Time Left: <span id="timer">30</span> seconds</div>
+    <div id="finalScore"></div>
+    <div id="score">0</div>
+    <button id="newGameButton">New Game</button>
+    <div id="playerNameDisplay"></div>
+    <div id="leaderboard">
+        <h3>Leaderboard</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                <!-- Leaderboard rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan', 'magenta', 'lime', 'deepskyblue', 'gold', 'white', 'black'];
+
+        let clickCount = 0;
+        let secondsLeft = 30;
+        let playerName = '';
+        let gameStarted = false;
+        let originalBall = null;
+        let originalX = 100, originalY = 100;
+        let originalDX = 10, originalDY = 10;
+        let animationFrameId;
+        let timerInterval;
+
+        const counterElement = document.getElementById('counter');
+        const timerElement = document.getElementById('timer');
+        const finalScoreElement = document.getElementById('finalScore');
+        const scoreElement = document.getElementById('score');
+        const newGameButton = document.getElementById('newGameButton');
+        const playerNameDisplay = document.getElementById('playerNameDisplay');
+        const leaderboardBody = document.getElementById('leaderboardBody');
+
+        function updateLeaderboard() {
+            let leaderboardData = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            leaderboardData.sort((a, b) => b.score - a.score);
+            leaderboardBody.innerHTML = '';
+
+            for (let i = 0; i < Math.min(leaderboardData.length, 5); i++) {
+                const player = leaderboardData[i];
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${i + 1}</td><td>${player.name}</td><td>${player.score}</td>`;
+                leaderboardBody.appendChild(row);
+            }
+        }
+
+        function saveScoreToLeaderboard() {
+            let leaderboardData = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            leaderboardData.push({ name: playerName, score: clickCount });
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboardData));
+            updateLeaderboard();
+        }
+
+        function updateCounter() {
+            counterElement.innerHTML = `Time Left: <span id="timer">${secondsLeft}</span> seconds`;
+        }
+
+        function updateFinalScore() {
+            finalScoreElement.textContent = `Final Score: ${clickCount}`;
+            finalScoreElement.style.display = 'block';
+            counterElement.style.display = 'none';
+            scoreElement.style.display = 'none';
+            newGameButton.style.display = 'block';
+            document.querySelectorAll('.ball').forEach(ball => ball.remove());
+            playerNameDisplay.style.display = 'none';
+            saveScoreToLeaderboard();
+        }
+
+        function updateScore() {
+            scoreElement.textContent = clickCount;
+        }
+
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function createBall(x, y) {
+            const ball = document.createElement('div');
+            ball.classList.add('ball');
+            ball.style.left = x + 'px';
+            ball.style.top = y + 'px';
+            ball.style.backgroundColor = getRandomColor();
+            document.body.appendChild(ball);
+
+            ball.addEventListener('click', () => {
+                ball.remove();
+                clickCount++;
+                updateScore();
+                createBall(
+                    Math.random() * (window.innerWidth - ball.clientWidth),
+                    Math.random() * (window.innerHeight - ball.clientHeight)
+                );
+            });
+
+            return ball;
+        }
+
+        function moveBall(ball) {
+            let x = parseFloat(ball.style.left);
+            let y = parseFloat(ball.style.top);
+            let dx = originalDX;
+            let dy = originalDY;
+
+            function update() {
+                x += dx;
+                y += dy;
+
+                if (x <= 0 || x >= window.innerWidth - ball.clientWidth) {
+                    dx = -dx;
+                }
+
+                if (y <= 0 || y >= window.innerHeight - ball.clientHeight) {
+                    dy = -dy;
+                }
+
+                ball.style.left = x + 'px';
+                ball.style.top = y + 'px';
+
+                if (gameStarted) {
+                    animationFrameId = requestAnimationFrame(update);
+                }
+            }
+
+            animationFrameId = requestAnimationFrame(update);
+        }
+
+        function startGame() {
+            clickCount = 0;
+            secondsLeft = 30;
+            gameStarted = true;
+
+            counterElement.style.display = 'block';
+            scoreElement.style.display = 'block';
+            scoreElement.textContent = clickCount;
+            finalScoreElement.style.display = 'none';
+            newGameButton.style.display = 'none';
+            playerNameDisplay.style.display = 'block';
+            updateCounter();
+
+            originalBall = createBall(originalX, originalY);
+            moveBall(originalBall);
+
+            timerInterval = setInterval(() => {
+                secondsLeft--;
+                updateCounter();
+                if (secondsLeft <= 0) {
+                    gameStarted = false;
+                    clearInterval(timerInterval);
+                    cancelAnimationFrame(animationFrameId);
+                    updateFinalScore();
+                }
+            }, 1000);
+        }
+
+        document.getElementById('startButton').addEventListener('click', () => {
+            document.getElementById('startButton').style.display = 'none';
+            document.getElementById('nameInput').style.display = 'block';
+        });
+
+        document.getElementById('nameSubmit').addEventListener('click', () => {
+            playerName = document.getElementById('playerName').value.trim();
+            if (playerName === '') {
+                alert('Please enter your name.');
+                return;
+            }
+
+            document.getElementById('nameInput').style.display = 'none';
+            playerNameDisplay.textContent = `Player: ${playerName}`;
+            startGame();
+        });
+
+        newGameButton.addEventListener('click', () => {
+            startGame();
+        });
+
+        window.addEventListener('load', updateLeaderboard);
+    </script>
+</body>
+</html>
+
