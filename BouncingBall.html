@@ -247,23 +247,25 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
 
-        function createBall(x, y) {
+        function createBall(x, y, isOriginal) {
             const ball = document.createElement('div');
             ball.classList.add('ball');
             ball.style.left = x + 'px';
             ball.style.top = y + 'px';
             ball.style.backgroundColor = getRandomColor();
 
-            ball.addEventListener('click', () => {
-                clickCount++;
-                updateScore();
+            if (isOriginal) {
+                ball.addEventListener('click', () => {
+                    clickCount++;
+                    updateScore();
 
-                const newX = Math.random() * (window.innerWidth - ball.offsetWidth);
-                const newY = Math.random() * (window.innerHeight - ball.offsetHeight);
+                    const newX = Math.random() * (window.innerWidth - ball.offsetWidth);
+                    const newY = Math.random() * (window.innerHeight - ball.offsetHeight);
 
-                const newBall = createBall(newX, newY);
-                animateBall(newBall);
-            });
+                    const newBall = createBall(newX, newY, false);
+                    animateBall(newBall);
+                });
+            }
 
             document.body.appendChild(ball);
 
@@ -326,7 +328,7 @@
             updateCounter();
             updateScore();
             updateLeaderboard();
-            originalBall = createBall(originalX, originalY);
+            originalBall = createBall(originalX, originalY, true);
             animateBall(originalBall);
             let timer = setInterval(() => {
                 secondsLeft--;
@@ -342,9 +344,11 @@
         newGameButton.addEventListener('click', () => {
             document.getElementById('finalScore').style.display = 'none';
             document.getElementById('startButton').style.display = 'block';
+            newGameButton.style.display = 'none'; // Hide the New Game button after it's clicked
         });
 
         updateLeaderboard();
     </script>
 </body>
 </html>
+
