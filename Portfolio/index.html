@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amairani Solis | AI Prompt Engineering Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <header>
+        <div class="logo">Amairani Solis</div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#ai">AI Prompt Engineering</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section id="home" class="hero">
+	<video autoplay loop muted playsinline id="bg-video">
+        	<source src="CodeGirl_video.mp4" type="video/mp4">
+    	</video>
+    	<div class="hero-content">
+		<h1>AI Prompt Engineering Portfolio</h1>
+        	<p>Exploring the art of AI interaction, automation, and creative engineering.</p>
+        	<a href="#ai" class="btn">Discover More</a>
+	</div>
+    </section>
+
+    <section id="ai" class="interactive-section">
+        <h2>What is AI Prompt Engineering?</h2>
+        <p>AI Prompt Engineering involves crafting precise prompts to guide AI responses, creating automation tools, and developing interactive AI experiences.</p>
+    </section>
+
+    <section id="projects" class="projects-section">
+        <h2>Featured AI Projects</h2>
+        <div class="project-categories">
+            <button class="category-btn" onclick="showCategory('writing')">📝 AI for Writing</button>
+            <button class="category-btn" onclick="showCategory('coding')">💻 AI for Coding</button>
+            <button class="category-btn" onclick="showCategory('uxui')">🎨 AI for UX/UI</button>
+            <button class="category-btn" onclick="showCategory('research')">📊 AI for Research & Analysis</button>
+        </div>
+        
+        <div id="writing" class="project-category">
+            <h3>📝 AI for Writing</h3>
+            <div class="project-card">
+                <h3>AI Storytelling Assistant</h3>
+                <p><strong>Challenge:</strong> Help writers generate creative story ideas.</p>
+                <p><strong>Initial AI Response:</strong> Generic, unstructured prompts.</p>
+                <p><strong>Refined Prompt:</strong> Used structured templates to guide AI-generated ideas.</p>
+                <p><strong>Final Outcome:</strong> AI-generated structured short story ideas tailored to different genres.</p>
+            </div>
+        </div>
+        
+        <div id="coding" class="project-category hidden">
+            <h3>💻 AI for Coding</h3>
+            <div class="project-card">
+                <h3>Automated Code Generator</h3>
+                <p><strong>Challenge:</strong> Generate functional code snippets using AI.</p>
+                <p><strong>Initial AI Response:</strong> Messy and inconsistent syntax.</p>
+                <p><strong>Refined Prompt:</strong> Structured inputs with specific formatting requests.</p>
+                <p><strong>Final Outcome:</strong> AI-generated clean and efficient boilerplate code.</p>
+            </div>
+        </div>
+        
+        <div id="uxui" class="project-category hidden">
+            <h3>🎨 AI for UX/UI</h3>
+            <div class="project-card">
+                <h3>AI-Powered UI Enhancements</h3>
+                <p><strong>Challenge:</strong> Generate UI/UX design suggestions based on user input.</p>
+                <p><strong>Initial AI Response:</strong> Generic UI suggestions without context.</p>
+                <p><strong>Refined Prompt:</strong> Provided user intent and aesthetic preferences in the prompt.</p>
+                <p><strong>Final Outcome:</strong> AI-generated UI elements matching specific branding and usability goals.</p>
+            </div>
+        </div>
+        
+        <div id="research" class="project-category hidden">
+            <h3>📊 AI for Research & Analysis</h3>
+            <div class="project-card">
+                <h3>Smart Resume Analyzer</h3>
+                <p><strong>Challenge:</strong> Extract key insights from resumes using AI.</p>
+                <p><strong>Initial AI Response:</strong> Poorly structured resume insights.</p>
+                <p><strong>Refined Prompt:</strong> Used clear structure for experience, skills, and strengths.</p>
+                <p><strong>Final Outcome:</strong> AI-generated structured resume analysis and recommendations.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="contact-section">
+        <h2>Get in Touch</h2>
+        <p>Interested in AI Prompt Engineering? Let's connect!</p>
+        <a href="mailto:amairanysolis015@gmail.com" class="btn">Email Me</a>
+    </section>
+    
+    <footer>
+        <p>&copy; 2025 Amairani Solis. All rights reserved.</p>
+    </footer>
+</body>
+</html>
